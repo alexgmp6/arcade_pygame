@@ -16,7 +16,7 @@ MAX_SHOTS      = 3      #most player bullets onscreen
 ALIEN_ODDS     = 30     #chances a new alien appears
 BOMB_ODDS      = 60    #chances a new bomb will drop
 ALIEN_RELOAD   = 12     #frames between new aliens
-SCREENRECT     = Rect(0, 0, 640, 480)
+SCREENRECT     = Rect(0, 0, 640, 480)#640,
 SCORE          = 0
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
@@ -28,7 +28,7 @@ def load_image(file):
         surface = pygame.image.load(file)
     except pygame.error:
         raise SystemExit('Could not load image "%s" %s'%(file, pygame.get_error()))
-    return surface.convert()
+    return surface.convert_alpha()
 
 def load_images(*files):
     imgs = []
@@ -210,7 +210,10 @@ def main(winstyle = 0):
     Player.images = [img, pygame.transform.flip(img, 1, 0)]
     img = load_image('explosion1.gif')
     Explosion.images = [img, pygame.transform.flip(img, 1, 1)]
-    Alien.images = load_images('bicho1.png', 'bicho2.png', 'bicho3.png','bicho4','bicho5','bicho6','bicho7','bicho8','bicho9','bicho10','bicho11','bicho12','bicho13','bicho14','bicho15','bicho16')
+    Alien.images = load_images('bicho1.png', 'bicho2.png', 'bicho3.png',
+    'bicho4.png','bicho5.png','bicho6.png','bicho7.png','bicho8.png',
+    'bicho9.png','bicho10.png','bicho11.png','bicho12.png','bicho13.png',
+    'bicho14.png','bicho15.png','bicho16.png')
     PowerUp.images = [load_image('omega.png')]
     Bomb.images = [load_image('bomb.gif')]
     Shot.images = [load_image('shot.gif')]
@@ -232,6 +235,7 @@ def main(winstyle = 0):
     #load the sound effects
     boom_sound = load_sound('boom.wav')
     shoot_sound = load_sound('car_door.wav')
+    power_up_sound=load_sound('powerUP.wav')
     if pygame.mixer:
         music = os.path.join(main_dir, 'data', 'house_lo.wav')
         pygame.mixer.music.load(music)
@@ -329,6 +333,7 @@ def main(winstyle = 0):
         
         for power_up in pygame.sprite.spritecollide(player, power_ups, 1):
             power_up.kill()
+            power_up_sound.play()
             Shot.images = [load_image('shot2.gif')]
 
 
