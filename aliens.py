@@ -90,7 +90,7 @@ class Player(pygame.sprite.Sprite):
 
 
 class Alien(pygame.sprite.Sprite):
-    speed = 7
+    speed = 3
     animcycle = 5
     images = []
     def __init__(self):
@@ -140,6 +140,22 @@ class Shot(pygame.sprite.Sprite):
         self.rect.move_ip(0, self.speed)
         if self.rect.top <= 0:
             self.kill()
+
+class PowerUp(pygame.sprite.Sprite):
+    speed = 2
+    animcycle = 5
+    images = []
+    def __init__(self, pos):
+        pygame.sprite.Sprite.__init__(self, self.containers)
+        self.image = self.images[0]
+        self.rect = self.image.get_rect(midbottom=pos)
+    
+    def update(self):        
+        self.rect.move_ip(0, self.speed)
+        if not SCREENRECT.contains(self.rect):
+            self.rect.top = self.rect.bottom + 1
+            self.rect = self.rect.clamp(SCREENRECT)        
+        self.image = self.images[0]
 
 
 class Bomb(pygame.sprite.Sprite):
@@ -195,6 +211,7 @@ def main(winstyle = 0):
     img = load_image('explosion1.gif')
     Explosion.images = [img, pygame.transform.flip(img, 1, 1)]
     Alien.images = load_images('alien1.gif', 'alien2.gif', 'alien3.gif')
+    PowerUp.images = [load_image('omega.png')]
     Bomb.images = [load_image('bomb.gif')]
     Shot.images = [load_image('shot.gif')]
 
@@ -224,11 +241,13 @@ def main(winstyle = 0):
     aliens = pygame.sprite.Group()
     shots = pygame.sprite.Group()
     bombs = pygame.sprite.Group()
+    power_ups = pygame.sprite.Group()
     all = pygame.sprite.RenderUpdates()
     lastalien = pygame.sprite.GroupSingle()
 
     #assign default groups to each sprite class
     Player.containers = all
+    PowerUp.containers = power_ups, all
     Alien.containers = aliens, all, lastalien
     Shot.containers = shots, all
     Bomb.containers = bombs, all
@@ -243,13 +262,20 @@ def main(winstyle = 0):
 
     #initialize our starting sprites
     global SCORE
+    global LAST_SCORE
     player = Player()
     Alien() #note, this 'lives' because it goes into a sprite group
     if pygame.font:
         all.add(Score())
 
 
+    LAST_SCORE = SCORE
     while player.alive():
+
+        if LAST_SCORE > 0 and (LAST_SCORE % 10) == 0:
+            Alien.speed = Alien.speed + 2
+            LAST_SCORE = 0
+
 
         #get input
         for event in pygame.event.get():
@@ -267,7 +293,7 @@ def main(winstyle = 0):
         #handle player input
         direction = keystate[K_RIGHT] - keystate[K_LEFT]
         player.move(direction)
-        firing = keystate[K_SPACE]
+        firing = keystate[K_SPACE] 
         if not player.reloading and firing and len(shots) < MAX_SHOTS:
             Shot(player.gunpos())
             shoot_sound.play()
@@ -278,8 +304,10 @@ def main(winstyle = 0):
             alienreload = alienreload - 1
         elif not int(random.random() * ALIEN_ODDS):
             Alien()
+            if (random.randint(0, 100) > 10):
+                PowerUp((random.randint(1, 600), 1))
             alienreload = ALIEN_RELOAD
-
+ 
         # Drop bombs
         if lastalien and not int(random.random() * BOMB_ODDS):
             Bomb(lastalien.sprite)
@@ -290,12 +318,19 @@ def main(winstyle = 0):
             Explosion(alien)
             Explosion(player)
             SCORE = SCORE + 1
+            LAST_SCORE = SCORE
             player.kill()
 
         for alien in pygame.sprite.groupcollide(shots, aliens, 1, 1).keys():
             boom_sound.play()
             Explosion(alien)
             SCORE = SCORE + 1
+            LAST_SCORE = SCORE
+        
+        for power_up in pygame.sprite.spritecollide(player, power_ups, 1):
+            power_up.kill()
+            Shot.images = [load_image('shot2.gif')]
+
 
         for bomb in pygame.sprite.spritecollide(player, bombs, 1):
             boom_sound.play()
