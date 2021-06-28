@@ -2,7 +2,7 @@ import pygame
 import sujetos
 import os
 import time
-import aliens.py
+
 
 # Constantes
 __ANCHO = 640

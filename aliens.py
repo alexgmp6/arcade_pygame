@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from os import wait
 import random, os.path
 
 #import basic pygame modules
@@ -237,6 +238,7 @@ def main(winstyle = 0):
     boom_sound = load_sound('boom.wav')
     shoot_sound = load_sound('car_door.wav')
     power_up_sound=load_sound('powerUP.wav')
+    game_over_sound=load_sound('game_over.mp3')
     print('powerup sound cargado')
     if pygame.mixer:
         music = os.path.join(main_dir, 'data', 'house_lo.wav')
@@ -337,13 +339,14 @@ def main(winstyle = 0):
             power_up.kill()
             power_up_sound.play()
             print('powerup reporducido')
-            Shot.images = [load_image('shot2.gif')]
+            Shot.images = [load_image('shot2.png')]
 
 
         for bomb in pygame.sprite.spritecollide(player, bombs, 1):
             boom_sound.play()
             Explosion(player)
             Explosion(bomb)
+            
             player.kill()
 
         #draw the scene
