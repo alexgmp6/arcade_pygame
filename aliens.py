@@ -206,11 +206,11 @@ def main(winstyle = 0):
 
     #Load images, assign to sprite classes
     #(do this before the classes are used, after screen setup)
-    img = load_image('player1.gif')
+    img = load_image('tanque.png')
     Player.images = [img, pygame.transform.flip(img, 1, 0)]
     img = load_image('explosion1.gif')
     Explosion.images = [img, pygame.transform.flip(img, 1, 1)]
-    Alien.images = load_images('alien1.gif', 'alien2.gif', 'alien3.gif')
+    Alien.images = load_images('bicho1.png', 'bicho2.png', 'bicho3.png')
     PowerUp.images = [load_image('omega.png')]
     Bomb.images = [load_image('bomb.gif')]
     Shot.images = [load_image('shot.gif')]
