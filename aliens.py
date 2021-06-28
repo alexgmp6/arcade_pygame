@@ -191,6 +191,7 @@ class Score(pygame.sprite.Sprite):
             self.image = self.font.render(msg, 0, self.color)
 
 
+    
 
 def main(winstyle = 0):
     # Initialize pygame
@@ -215,7 +216,7 @@ def main(winstyle = 0):
     'bicho9.png','bicho10.png','bicho11.png','bicho12.png','bicho13.png',
     'bicho14.png','bicho15.png','bicho16.png')
     PowerUp.images = [load_image('omega.png')]
-    Bomb.images = [load_image('bomb.gif')]
+    Bomb.images = [load_image('bomb.png')]
     Shot.images = [load_image('shot.gif')]
 
     #decorate the game window
@@ -236,6 +237,7 @@ def main(winstyle = 0):
     boom_sound = load_sound('boom.wav')
     shoot_sound = load_sound('car_door.wav')
     power_up_sound=load_sound('powerUP.wav')
+    print('powerup sound cargado')
     if pygame.mixer:
         music = os.path.join(main_dir, 'data', 'house_lo.wav')
         pygame.mixer.music.load(music)
@@ -334,6 +336,7 @@ def main(winstyle = 0):
         for power_up in pygame.sprite.spritecollide(player, power_ups, 1):
             power_up.kill()
             power_up_sound.play()
+            print('powerup reporducido')
             Shot.images = [load_image('shot2.gif')]
 
 
