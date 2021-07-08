@@ -10,6 +10,8 @@ from threading import Timer
 from config import *
 from load import *
 from sprites import *
+import config
+import sprites
 
 #see if we can load more than standard BMP
 if not pygame.image.get_extended():
@@ -17,29 +19,23 @@ if not pygame.image.get_extended():
 
 
 
-# each type of game object gets an init and an
-# update function. the update function is called
-# once per frame, and it is when each object should
-# change it's current position and state. the Player
-# object actually gets a "move" function instead of
-# update, since it is passed extra information about
-# the keyboard
+
 
 
 
 def game(winstyle = 0):
-    # Initialize pygame
+    # init pygame
     pygame.init()
     if pygame.mixer and not pygame.mixer.get_init():
         print ('Warning, no sound')
         pygame.mixer = None
 
-    # Set the display mode
+    # configuramos el modo de pantalla
     winstyle = 0  # |FULLSCREEN
     bestdepth = pygame.display.mode_ok(SCREENRECT.size, winstyle, 32)
     screen = pygame.display.set_mode(SCREENRECT.size, winstyle, bestdepth)
 
-    #Load images, assign to sprite classes
+    #carga de imagenes, asignamos a las clases de sprites
     #(do this before the classes are used, after screen setup)
     img = load_image('tanque.png')
     Player.images = [img, pygame.transform.flip(img, 1, 0)]
@@ -53,13 +49,13 @@ def game(winstyle = 0):
     Bomb.images = [load_image('bomb.png')]
     Shot.images = [load_image('shot.gif')]
 
-    #decorate the game window
+    #decoramos la ventana
     icon = pygame.transform.scale(Alien.images[0], (32, 32))
     pygame.display.set_icon(icon)
     pygame.display.set_caption('Arcade Game')
     pygame.mouse.set_visible(0)
 
-    #create the background, tile the bgd image
+    #creamos background
     bgdtile = load_image('background.png')
     background = pygame.Surface(SCREENRECT.size)
     for x in range(0, SCREENRECT.width, bgdtile.get_width()):
@@ -67,7 +63,7 @@ def game(winstyle = 0):
     screen.blit(background, (0,0))
     pygame.display.flip()
 
-    #load the sound effects
+    #cargamos los efectos
     boom_sound = load_sound('boom.wav')
     shoot_sound = load_sound('car_door.wav')
     power_up_sound=load_sound('powerUP.wav')
@@ -78,7 +74,7 @@ def game(winstyle = 0):
         pygame.mixer.music.load(music)
         pygame.mixer.music.play(-1)
 
-    # Initialize Game Groups
+    # inicializamos los grupos
     aliens = pygame.sprite.Group()
     shots = pygame.sprite.Group()
     bombs = pygame.sprite.Group()
@@ -86,7 +82,7 @@ def game(winstyle = 0):
     all = pygame.sprite.RenderUpdates()
     lastalien = pygame.sprite.GroupSingle()
 
-    #assign default groups to each sprite class
+    #asignamos los grupos por defecto
     Player.containers = all
     PowerUp.containers = power_ups, all
     Alien.containers = aliens, all, lastalien
@@ -95,14 +91,14 @@ def game(winstyle = 0):
     Explosion.containers = all
     Score.containers = all
 
-    #Create Some Starting Values
+    #creamos algunos valores de inicio
     alienreload = ALIEN_RELOAD
     kills = 0
     clock = pygame.time.Clock()
 
     #initialize our starting sprites
     player = Player()
-    Alien() #note, this 'lives' because it goes into a sprite group
+    Alien() #nota, esto 'vive' porque entra en un grupo de sprites
     if pygame.font:
         all.add(Score())
 
@@ -126,19 +122,19 @@ def game(winstyle = 0):
         # clear/erase the last drawn sprites
         all.clear(screen, background)
 
-        #update all the sprites
+        #actualizamos sprites
         all.update()
 
         #handle player input
         direction = keystate[K_RIGHT] - keystate[K_LEFT]
         player.move(direction)
         firing = keystate[K_SPACE] 
-        if not player.reloading and firing and len(shots) < MAX_SHOTS:
+        if not player.reloading and firing and len(shots) < config.max_shots:
             Shot(player.gunpos())
             shoot_sound.play()
         player.reloading = firing
 
-        # Create new alien
+        # creamos nuevo alien
         if alienreload:
             alienreload = alienreload - 1
         elif not int(random.random() * ALIEN_ODDS):
@@ -149,7 +145,7 @@ def game(winstyle = 0):
         if lastalien and not int(random.random() * BOMB_ODDS):
             Bomb(lastalien.sprite)
 
-        # Detect collisions
+        # deteccion de colisiones
         for alien in pygame.sprite.spritecollide(player, aliens, 1):
             boom_sound.play()
             Explosion(alien)
@@ -159,16 +155,25 @@ def game(winstyle = 0):
             player.kill()
 
         for alien in pygame.sprite.groupcollide(shots, aliens, 1, 1).keys():
-            boom_sound.play()
-            Explosion(alien)
-            Score.SCORE = Score.SCORE + 1
-            Score.LAST_Score = Score.SCORE
+            #alien.one_life_less()
+            if alien.getLife()!=0:
+                pass
+
+            else:    
+                boom_sound.play()
+                Explosion(alien)
+                Score.SCORE = Score.SCORE + 1
+                Score.LAST_Score = Score.SCORE
         
         for power_up in pygame.sprite.spritecollide(player, power_ups, 1):
             power_up.kill()
-            power_up_sound.play()            
+            power_up_sound.play()   
+            config.max_shots =100  
+            player.speed=20      
             Shot.images = [load_image('shot2.png')]
             def cargar_bala_original():
+                config.max_shots=2
+                player.speed=10
                 power_up_down.play()
                 Shot.images = [load_image('shot.gif')]
             t = Timer(5, cargar_bala_original)
@@ -182,7 +187,7 @@ def game(winstyle = 0):
             
             player.kill()
 
-        #draw the scene
+        #pintamos la escena
         dirty = all.draw(screen)
         pygame.display.update(dirty)
 

@@ -2,6 +2,7 @@ import pygame
 import random
 from config import SCREENRECT
 from pygame.locals import *
+import random
 
 class Player(pygame.sprite.Sprite):
     speed = 10
@@ -35,7 +36,9 @@ class Alien(pygame.sprite.Sprite):
     speed = 3
     animcycle = 5
     images = []
+    
     def __init__(self):
+        self.life=random.randint(1,3)#resisten de 1 a 3 balas
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.image = self.images[0]
         self.rect = self.image.get_rect()
@@ -52,6 +55,17 @@ class Alien(pygame.sprite.Sprite):
             self.rect = self.rect.clamp(SCREENRECT)
         self.frame = self.frame + 1
         self.image = self.images[self.frame//self.animcycle%3]
+
+
+    def getLife(self):
+        return self.life
+
+        
+    def one_life_less(self):
+        self.life =self.life - 1
+        
+    
+    
 
 
 class Explosion(pygame.sprite.Sprite):
