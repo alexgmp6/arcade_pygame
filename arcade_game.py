@@ -156,14 +156,14 @@ def game(winstyle = 0):
 
         for alien in pygame.sprite.groupcollide(shots, aliens, 1, 1).keys():
             #alien.one_life_less()
-            if alien.getLife()!=0:
-                pass
+            #if alien.getLife()!=0:
+             #   pass
 
-            else:    
-                boom_sound.play()
-                Explosion(alien)
-                Score.SCORE = Score.SCORE + 1
-                Score.LAST_Score = Score.SCORE
+            #else:    
+            boom_sound.play()
+            Explosion(alien)
+            Score.SCORE = Score.SCORE + 1
+            Score.LAST_Score = Score.SCORE
         
         for power_up in pygame.sprite.spritecollide(player, power_ups, 1):
             power_up.kill()

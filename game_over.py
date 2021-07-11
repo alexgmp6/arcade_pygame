@@ -12,9 +12,14 @@ __VX=2
 
 # Inicializaciones y variables globales
 pygame.init()
+font_name ="WONDER.TTF"
 screen = pygame.display.set_mode((__ANCHO,__ALTO))
 pygame.display.set_caption("cartel")
 reloj = pygame.time.Clock()
+
+def __init__(self):
+    pygame.init()
+    self.font_name="data/WONDER.TTF"
 
 
 def main():
@@ -41,7 +46,9 @@ def main():
                     return "QUIT"
             elif event.type == KEYDOWN and event.key != K_ESCAPE:
                 return "RESTART"
-        reloj.tick(144)              
+        reloj.tick(144)     
+
+
         
         
 

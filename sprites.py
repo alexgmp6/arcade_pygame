@@ -38,7 +38,8 @@ class Alien(pygame.sprite.Sprite):
     images = []
     
     def __init__(self):
-        self.life=random.randint(1,3)#resisten de 1 a 3 balas
+        #self.life=random.randint(1,3)#resisten de 1 a 3 balas
+
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.image = self.images[0]
         self.rect = self.image.get_rect()
