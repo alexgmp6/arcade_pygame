@@ -1,6 +1,6 @@
 import pygame
 import random
-from config import SCREENRECT, ALIEN_ODDS
+from config import SCREENRECT, ALIEN_ODDS,BOMB_ODDS
 from pygame.locals import *
 import random
 
@@ -38,6 +38,7 @@ class Alien(pygame.sprite.Sprite):
     images = []
     life = 1
     alien_frequency = ALIEN_ODDS
+    alien_bombs_frequency=BOMB_ODDS
     
     
     def __init__(self):
@@ -77,9 +78,16 @@ class Alien(pygame.sprite.Sprite):
 
     def increase_alien_frequency():
         if Alien.alien_frequency > 0:
-            Alien.alien_frequency -= 10
-        if Alien.alien_frequency < 10:
-            Alien.alien_frequency = 10
+            Alien.alien_frequency -= 5
+        if Alien.alien_frequency < 20:
+            Alien.alien_frequency = 20
+        print("tiempo por cada aparicion",Alien.alien_frequency)
+    def increase_alien_bombs_frequency():
+        if Alien.alien_bombs_frequency >0:
+            Alien.alien_bombs_frequency-=5
+        if Alien.alien_bombs_frequency<15:
+            Alien.alien_bombs_frequency=15
+        print("tiempo por cada bomba",Alien.alien_bombs_frequency)
         
     
     

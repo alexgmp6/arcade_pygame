@@ -107,10 +107,14 @@ def game(winstyle = 0):
     while player.alive():
 
         if Score.LAST_Score > 0 and (Score.SCORE % 10) == 0:
-            Alien.speed = Alien.speed + 2
+            if Alien.speed <4:
+                Alien.speed = Alien.speed + 1
+                print("velocidad ",Alien.speed) 
             if Alien.life<3:
                 Alien.life +=1
+                print("vidas de un alien", Alien.life)
             Alien.increase_alien_frequency()
+            Alien.increase_alien_bombs_frequency()
             Score.LAST_Score = 0
             PowerUp((random.randint(1, 600), 1))
 
