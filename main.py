@@ -1,4 +1,4 @@
-import sys
+import sys  
 import arcade_game
 
 def main():

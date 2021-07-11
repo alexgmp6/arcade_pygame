@@ -16,10 +16,8 @@ font_name ="WONDER.TTF"
 screen = pygame.display.set_mode((__ANCHO,__ALTO))
 pygame.display.set_caption("cartel")
 reloj = pygame.time.Clock()
-
-def __init__(self):
-    pygame.init()
-    self.font_name="data/WONDER.TTF"
+fondo = pygame.image.load("data/fondo_game_over.jpeg")
+pygame.display.set_caption('Arcade Game')
 
 
 def main():
@@ -31,10 +29,12 @@ def main():
     vx = 2
     
     while exit != True:    
-        screen.fill((0, 0, 0))
+        #screen.fill((0, 0, 0))
+        screen.blit(fondo, (0, 0))
         for sprite in sprites:
             sprite.move(-vx,0)
             sprite.update(screen)
+            
             if sprites[-1].rect.left < -45:
                 sprites = init_letras.text_banner("Game Over")
         pygame.display.update()

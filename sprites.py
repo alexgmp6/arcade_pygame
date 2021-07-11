@@ -1,6 +1,6 @@
 import pygame
 import random
-from config import SCREENRECT
+from config import SCREENRECT, ALIEN_ODDS
 from pygame.locals import *
 import random
 
@@ -36,9 +36,12 @@ class Alien(pygame.sprite.Sprite):
     speed = 3
     animcycle = 5
     images = []
+    life = 1
+    alien_frequency = ALIEN_ODDS
+    
     
     def __init__(self):
-        #self.life=random.randint(1,3)#resisten de 1 a 3 balas
+        self.life=Alien.life#incrementaremos vidas por niveles
 
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.image = self.images[0]
@@ -64,6 +67,19 @@ class Alien(pygame.sprite.Sprite):
         
     def one_life_less(self):
         self.life =self.life - 1
+
+
+    def kill(self):
+        if self.life != 1 :
+            self.one_life_less()
+        else:
+            pygame.sprite.Sprite.kill(self)
+
+    def increase_alien_frequency():
+        if Alien.alien_frequency > 0:
+            Alien.alien_frequency -= 10
+        if Alien.alien_frequency < 10:
+            Alien.alien_frequency = 10
         
     
     

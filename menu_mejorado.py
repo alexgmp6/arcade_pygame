@@ -1,18 +1,17 @@
-# -*- coding: utf-8 -*-
-#
-# autor: Hugo Ruscitti
-# web: www.losersjuegos.com.ar
-# licencia: GPL 2
+
 
 import random
 import pygame
 from pygame.locals import *
+import main
 
+pygame.display.set_caption('Arcade Game')
 
 class Opcion:
 
     def __init__(self, fuente, titulo, x, y, paridad, funcion_asignada):
         self.imagen_normal = fuente.render(titulo, 1, (0, 0, 0))
+        
         self.imagen_destacada = fuente.render(titulo, 1, (200, 0, 0))
         self.image = self.imagen_normal
         self.rect = self.image.get_rect()
@@ -74,7 +73,9 @@ class Menu:
         self.cursor = Cursor(x - 30, y, 30)
 
         for titulo, funcion in opciones:
-            self.opciones.append(Opcion(fuente, titulo, x, y, paridad, funcion))
+            opcion = Opcion(fuente, titulo, x, y, paridad, funcion)
+            opcion.color= Color("white")
+            self.opciones.append(opcion)
             y += 30
             if paridad == 1:
                 paridad = -1
@@ -124,7 +125,7 @@ class Menu:
             opcion.imprimir(screen)
 
 def comenzar_nuevo_juego():
-    print (" Función que muestra un nuevo juego.")
+    main.main()
 
 def mostrar_opciones():
     print (" Función que muestra otro menú de opciones.")
@@ -138,19 +139,18 @@ def salir_del_programa():
     sys.exit(0)
 
 
-if __name__ == '__main__':
+def menu():
     
     salir = False
     opciones = [
         ("Jugar", comenzar_nuevo_juego),
-        ("Opciones", mostrar_opciones),
-        ("Creditos", creditos),
+        
         ("Salir", salir_del_programa)
         ]
 
     pygame.font.init()
-    screen = pygame.display.set_mode((320, 240))
-    fondo = pygame.image.load("fondo.png").convert()
+    screen = pygame.display.set_mode((640, 480))
+    fondo = pygame.image.load("data/fondo.jpeg").convert()
     menu = Menu(opciones)
 
     while not salir:
@@ -163,5 +163,11 @@ if __name__ == '__main__':
         menu.actualizar()
         menu.imprimir(screen)
 
+
         pygame.display.flip()
         pygame.time.delay(10)
+    
+    return "QUIT"
+
+if __name__ == "__main__":
+    menu()

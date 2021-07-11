@@ -108,6 +108,9 @@ def game(winstyle = 0):
 
         if Score.LAST_Score > 0 and (Score.SCORE % 10) == 0:
             Alien.speed = Alien.speed + 2
+            if Alien.life<3:
+                Alien.life +=1
+            Alien.increase_alien_frequency()
             Score.LAST_Score = 0
             PowerUp((random.randint(1, 600), 1))
 
@@ -137,7 +140,7 @@ def game(winstyle = 0):
         # creamos nuevo alien
         if alienreload:
             alienreload = alienreload - 1
-        elif not int(random.random() * ALIEN_ODDS):
+        elif not int(random.random() * Alien.alien_frequency):
             Alien()
             alienreload = ALIEN_RELOAD
  
@@ -154,12 +157,13 @@ def game(winstyle = 0):
             Score.LAST_Score = Score.SCORE
             player.kill()
 
-        for alien in pygame.sprite.groupcollide(shots, aliens, 1, 1).keys():
-            #alien.one_life_less()
-            #if alien.getLife()!=0:
-             #   pass
+        for alien in pygame.sprite.groupcollide(aliens, shots, 1, 1).keys():
+            
+            
+            """ if alien.getLife()!=0:
+                alien.one_life_less()
 
-            #else:    
+            else:  """   
             boom_sound.play()
             Explosion(alien)
             Score.SCORE = Score.SCORE + 1
@@ -196,7 +200,8 @@ def game(winstyle = 0):
     
     game_over_sound.play()
     
+    
     if pygame.mixer:
         pygame.mixer.music.stop()
-    pygame.time.wait(3000)
+    pygame.time.wait(4000)
     return game_over.main()
