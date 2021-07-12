@@ -4,8 +4,9 @@ import random
 import pygame
 from pygame.locals import *
 import main
-
+ 
 pygame.display.set_caption('Arcade Game')
+
 
 class Opcion:
 
@@ -41,7 +42,7 @@ class Opcion:
 class Cursor:
 
     def __init__(self, x, y, dy):
-        self.image = pygame.image.load('cursor.png').convert_alpha()
+        self.image = pygame.image.load('data/cursor.png').convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.y_inicial = y
@@ -65,7 +66,7 @@ class Menu:
     
     def __init__(self, opciones):
         self.opciones = []
-        fuente = pygame.font.Font('dejavu.ttf', 20)
+        fuente = pygame.font.Font('data/dejavu.ttf', 20)
         x = 105
         y = 105
         paridad = 1
@@ -144,6 +145,7 @@ def menu():
     salir = False
     opciones = [
         ("Jugar", comenzar_nuevo_juego),
+
         
         ("Salir", salir_del_programa)
         ]

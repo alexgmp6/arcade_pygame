@@ -42,7 +42,7 @@ class Alien(pygame.sprite.Sprite):
     
     
     def __init__(self):
-        self.life=Alien.life#incrementaremos vidas por niveles
+        self.life=random.randint(1,Alien.life) #incrementaremos vidas por niveles
 
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.image = self.images[0]
@@ -85,8 +85,8 @@ class Alien(pygame.sprite.Sprite):
     def increase_alien_bombs_frequency():
         if Alien.alien_bombs_frequency >0:
             Alien.alien_bombs_frequency-=5
-        if Alien.alien_bombs_frequency<15:
-            Alien.alien_bombs_frequency=15
+        if Alien.alien_bombs_frequency<0:
+            Alien.alien_bombs_frequency=0
         print("tiempo por cada bomba",Alien.alien_bombs_frequency)
         
     
@@ -126,6 +126,8 @@ class PowerUp(pygame.sprite.Sprite):
     speed = 2
     animcycle = 5
     images = []
+    catched=True
+    activado=False
     def __init__(self, pos):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.image = self.images[0]
@@ -172,3 +174,6 @@ class Score(pygame.sprite.Sprite):
             self.lastscore = Score.SCORE
             msg = "Score: %d" % Score.SCORE
             self.image = self.font.render(msg, 0, self.color)
+    def set_score(valor):
+        Score.SCORE = valor
+    

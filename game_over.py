@@ -3,6 +3,7 @@ import letras
 import os
 import time
 from pygame.locals import *
+import sprites
 
 
 # Constantes de game over
@@ -14,10 +15,10 @@ __VX=2
 pygame.init()
 font_name ="WONDER.TTF"
 screen = pygame.display.set_mode((__ANCHO,__ALTO))
-pygame.display.set_caption("cartel")
+pygame.display.set_caption("game over arcade")
 reloj = pygame.time.Clock()
 fondo = pygame.image.load("data/fondo_game_over.jpeg")
-pygame.display.set_caption('Arcade Game')
+
 
 
 def main():
@@ -45,7 +46,9 @@ def main():
                 (event.type == KEYDOWN and event.key == K_ESCAPE):
                     return "QUIT"
             elif event.type == KEYDOWN and event.key != K_ESCAPE:
+                
                 return "RESTART"
+                
         reloj.tick(144)     
 
 

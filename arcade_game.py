@@ -104,11 +104,12 @@ def game(winstyle = 0):
 
 
     Score.LAST_Score = Score.SCORE
+    
     while player.alive():
-
+        
         if Score.LAST_Score > 0 and (Score.SCORE % 10) == 0:
-            if Alien.speed <4:
-                Alien.speed = Alien.speed + 1
+            if Alien.speed <5:
+                Alien.speed = Alien.speed + 0.5
                 print("velocidad ",Alien.speed) 
             if Alien.life<3:
                 Alien.life +=1
@@ -116,7 +117,10 @@ def game(winstyle = 0):
             Alien.increase_alien_frequency()
             Alien.increase_alien_bombs_frequency()
             Score.LAST_Score = 0
-            PowerUp((random.randint(1, 600), 1))
+            if PowerUp.catched==True and PowerUp.activado==False:
+                PowerUp((random.randint(1, 600), 1))
+                PowerUp.catched=False
+                PowerUp.activado=False
 
 
         #get input
@@ -175,6 +179,7 @@ def game(winstyle = 0):
         
         for power_up in pygame.sprite.spritecollide(player, power_ups, 1):
             power_up.kill()
+            PowerUp.catched =True
             power_up_sound.play()   
             config.max_shots =100  
             player.speed=20      
@@ -183,9 +188,13 @@ def game(winstyle = 0):
                 config.max_shots=2
                 player.speed=10
                 power_up_down.play()
+                PowerUp.activado=False
                 Shot.images = [load_image('shot.gif')]
             t = Timer(5, cargar_bala_original)
+            PowerUp.activado=True
             t.start()
+            
+            
 
 
         for bomb in pygame.sprite.spritecollide(player, bombs, 1):
@@ -194,6 +203,7 @@ def game(winstyle = 0):
             Explosion(bomb)
             
             player.kill()
+            PowerUp.catched=True
 
         #pintamos la escena
         dirty = all.draw(screen)
